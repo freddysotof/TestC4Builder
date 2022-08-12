@@ -1,0 +1,44 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(cust, "Cliente", "Un cliente de Pizzarelli/Trattoria que desea comprar una sabrosa pizza.")
+Person(merc, "Mercadeo", "Configura campañas de descuentos y configuración de productos.")
+Person(ccdex, "Call Center", "Da seguimiento a las órdenes e incidencias con clientes.")
+' System(app, "App Pizzarelli", "Permite a los clientes de Pizzarelli y Trattoria ordenar una pizza, ver el menú y ver las distintas localidades.")
+Container_Ext(cloud, "Cloud Functions", "Firebase", "Proporciona funcionalidad del app y envío de clientes y órdenes por medio de peticiones JSON/HTTP.")
+System_Ext(rabbit, "RabbitMQ", "Microservicio de cola.")
+System_Ext(c2k, "API C2K", "Integra órdenes a las distintas sucursales de Pizzarelli/Trattoria.")
+System_Ext(chatbot, "ChatBot", "Base de datos del chatbot Pizzarelli.")
+Person_Ext(suc, "Sucursales", "Recibe las órdenes, las prepara y la envía al cliente.")
+System_Boundary(vmb, "Ventas Móviles Bona") {
+    Container(wa, "Web Application", ".NET 5 MVC", "Proporciona la funcionalidad del app para configurar y modificar las entidades del app por medio del navegador web.")
+    Container(spa, "Single Page Application", "ReactJS", "Valida correo electrónico o restablece contraseña del cliente.")
+    Container(api, "API Bona", ".NET 5", "Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros.")
+    Container(hosted, "API Bona Hosted Services", ".NET Background Services", "Servicio en segundo plano que envía y recibe información.")
+    Container(db, "Base de datos", "Esquema relacional (Sql Server)", "Guarda información de las distintas entidades y configuraciones que necesita el App.")
+    
+    Rel(api, rabbit, "Envía", "JSON/HTTPS")
+    Rel(api, db, "Lee y escriba en", "EntityFrameworkCore")
+    Rel(api, cloud, "Envía","JSON/HTTPS")
+    Rel(api, merc, "Envía correo", "SMTP")
+    Rel(api, ccdex, "Envía correo", "SMTP")
+
+    Rel(rabbit,hosted, "Envía", "JSON/HTTPS")
+    Rel(hosted, c2k, "Envía y consulta estatus de órdenes","JSON/HTTPS")
+    Rel(hosted, chatbot, "Envía","JSON/HTTPS")
+    
+    Rel(wa, api, "Usa", "JSON/HTTPS")
+    Rel(spa, api, "Usa", "JSON/HTTPS")
+    Rel(cust, spa, "Usa", "HTTPS")
+ 
+  
+}
+Rel(merc, wa, "Usa", "HTTPS")
+Rel(ccdex, wa, "Usa", "HTTPS")
+Rel(c2k,suc, "Integra órden","XML")
+Rel(suc, cust, "Envía la orden","Avispón")
+' Rel(sg, cust, "Envía confirmación de cuenta, restablecimiento de contraseña y/o factura de pedido")
+' Rel(tw, cust, "Envía confirmación de teléfono")
+@enduml

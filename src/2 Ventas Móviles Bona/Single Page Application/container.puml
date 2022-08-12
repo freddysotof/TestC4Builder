@@ -1,0 +1,18 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+Container(api, "API Bona", ".NET 5","Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros")
+
+Container_Boundary(spa, "Single Page Application") {
+    Component(routing, "Routing", "React router", "Manejar el enrutamiento de la aplicación (navegación entre componentes)")
+    ' Component(store, "Data Store", "Redux", "The central object holding the application state")
+    Component(mc, "Confirmación de correo", "React Component", "Valida el correo electrónico del cliente")
+    Component(rc, "Restablecer contraseña", "React Component", "Restablece la contraseña del cliente")
+}
+
+Rel(spa, api, "Usa", "JSON/HTTPS")
+
+
+@enduml

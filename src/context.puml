@@ -1,0 +1,42 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(cust, "Cliente", "Un cliente de Pizzarelli/Trattoria que desea comprar una sabrosa pizza.")
+Person_Ext(suc, "Sucursales", "Recibe las órdenes, las prepara y la envía al cliente.")
+Person(merc, "Mercadeo", "Configura campañas de descuentos y configuración de productos.")
+Person(ccdex, "Call Center", "Da seguimiento a las órdenes e incidencias con clientes.")
+System_Ext(tw, "Twilio", "Servicio de envío de minimensajes externo.")
+System_Ext(sg, "SendGrid", "Servicio de envío de correo externo.")
+System_Ext(c2k, "API C2K", "Integra órdenes a las distintas sucursales de Pizzarelli/Trattoria.")
+System_Ext(azul, "Azul Web", "Procesa el pago de la orden o registra tarjeta de crédito.")
+System(app, "App Pizzarelli", "Permite a los clientes de Pizzarelli y Trattoria ordenar una pizza, ver el menú y ver las distintas localidades.")
+System(vmb, "Ventas Móviles Bona", "Envía las configuraciones de las entidades App Pizzarelli y recibe datos del cliente y órdenes.")
+' System(api, "API Bona", "Envía y recibe información de los productos, tiendas, clientes y órdenes del App Pizzarelli.")
+' System(cf, "Cloud Functions", "Guarda los registros de los clientes, ordenes, tiendas y tiene comunicacion directa con Hub de Integración Bona.")
+
+' System_Ext(es, "SendGrid", " The internal Microsoft Exchange e-mail system.")
+' System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+Rel(cust, app, "Usa")
+Rel(app, vmb, "Envía clientes y órdenes","JSON/HTTPS")
+Rel(merc,vmb, "Usa")
+Rel(ccdex, vmb, "Usa")
+Rel(vmb,c2k, "Envía orden a la sucursal","JSON/HTTPS")
+Rel(c2k,suc, "Integra órden","XML")
+Rel(app, sg, "Envía correo", "JSON/HTTPS")
+Rel(app, azul, "Procesa el pago", "JSON/HTTPS")
+Rel(sg, cust, "Envía confirmación de cuenta, restablecimiento de contraseña y/o factura de pedido")
+Rel(app, tw, "Envía minimensaje", "JSON/HTTPS")
+Rel(tw, cust, "Envía confirmación de teléfono")
+Rel(suc, cust, "Envía la orden","Avispón")
+Rel(cust,vmb , "Valida el correo electrónico o restablece la contraseña","HTTPS")
+' Rel(api,c2k, "Usa")
+' Rel(vmb, api, "Usa")
+' Rel(ap, cf, "Usa")
+' Rel(cf, api, "Usa")
+
+
+' Rel(ibs, mbs, "Uses")
+@enduml

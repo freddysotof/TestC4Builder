@@ -1,0 +1,53 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+ Container(wa, "Web Application", ".NET 5 MVC", "Proporciona la funcionalidad del app para configurar y modificar las entidades del app por medio del navegador web.")
+Container(spa, "Single Page Application", "ReactJS", "Valida correo electrónico o restablece contraseña del cliente.")
+' Container(api, "API Bona", ".NET 5", "Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros.")
+Container(db, "Base de datos", "Esquema relacional (Sql Server)", "Guarda información de las distintas entidades y configuraciones que necesita el App.")
+Container_Ext(cloud, "Cloud Functions", "Firebase", "Proporciona funcionalidad del app y envío de clientes y órdenes por medio de peticiones JSON/HTTP.")
+System_Ext(rabbit, "RabbitMQ", "Microservicio de cola.")
+
+Container_Boundary(api, "API Bona") {
+    Component(acc, "Account Controller", "API Rest Controller", "Permite obtener token, crear usuarios y asignar roles de los usuarios del API")
+    Component(ad, "Active Directory Controller", "API Rest Controller", "Permite consultar usuarios del AD Bona")
+    Component(adm, "Admin Controller", "API Rest Controller", "Permite consultar el menú de una aplicacion por sistema y usuario")
+    Component(brands, "Brands Controller", "API Rest Controller", "Permite consultar y enviar información de las marcas")
+    Component(cities, "Cities Controller", "API Rest Controller", "Permite consultar y enviar información de las ciudades")
+    Component(cust, "Customers Controller", "API Rest Controller", "Permite consultar y recibir información de los clientes")
+    Component(disc, "Discounts Controller", "API Rest Controller", "Permite consultar y enviar información de los descuentos")
+    Component(gen, "General Controller", "API Rest Controller", "Permite consultar y enviar información generales del API")
+    Component(mail, "Mail Controller", "API Rest Controller", "Permite enviar correos SMTP")
+    Component(imail, "IMailService", "Service Interface", "Envia correo SMTP")
+    Component(notf, "Notification Controller", "API Rest Controller", "Permite enviar notificaciones al App Pizzarelli")
+    Component(prod, "Products Controller", "API Rest Controller", "Permite consultar y enviar información de los productos")
+    Component(reps, "Reports Controller", "API Rest Controller", "Permite consultar reportes de métricas del App")
+    Component(sect, "Sectors Controller", "API Rest Controller", "Permite consultar y enviar información de los sectores")
+    Component(trans, "Transactions Controller", "API Rest Controller", "Permite consultar y recibir transacciones")
+    Component(itrans, "ITransactionService", "Service Interface", "consulta y guarda transacciones")
+    Component(usrs, "Users Controller", "API Rest Controller", "Permite consultar y enviar información de los usuarios del API")
+    ' Component(accounts, "Accounts Summary Controller", "MVC Rest Controlle", "Provides customers with a summory of their bank accounts")
+    ' Component(security, "Security Component", "Spring Bean", "Provides functionality related to singing in, changing passwords, etc.")
+    ' Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+    Rel(trans, rabbit, "Envía orden a cola","JSON/HTTPS")
+    Rel(cust, rabbit, "Envía cliente a cola","JSON/HTTPS")
+    Rel(mail, imail, "Implementa","DI")
+    Rel(trans,itrans, "Implementa","DI")
+    Rel(itrans,imail, "Envía notificación","DI")
+    ' Rel(accounts, mbsfacade, "Uses")
+    ' Rel(security, db, "Read & write to", "JDBC")
+    ' Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+Rel(api, db, "Lee y escribe", "EntityFrameworkCore")
+Rel(cloud,api, "Consulta y envia", "JSON/HTTPS")
+Rel(wa,api, "Consulta y envia", "JSON/HTTPS")
+Rel(spa,api, "Consulta y envia", "JSON/HTTPS")
+' Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+' Rel(ma, sign, "Uses", "JSON/HTTPS")
+' Rel(ma, accounts, "Uses", "JSON/HTTPS")
+@enduml

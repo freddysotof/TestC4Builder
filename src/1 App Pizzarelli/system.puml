@@ -1,0 +1,38 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(cust, "Cliente", "Un cliente de Pizzarelli/Trattoria que desea comprar una sabrosa pizza.")
+System_Ext(tw, "Twilio", "Servicio de envío de minimensajes externo.")
+System_Ext(sg, "SendGrid", "Servicio de envío de correo externo.")
+System_Ext(azul, "Azul Web", "Procesa el pago de la orden o registra tarjeta de crédito.")
+' System(vmb, "Ventas Móviles Bona", "Envía las configuraciones de las entidades App Pizzarelli y recibe datos del cliente y órdenes.")
+Container_Ext(api, "API Bona", ".NET 5", "Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros.")
+System_Boundary(app, "App Pizzarelli") {
+    Container(ma, "Aplicación Móvil", "Ionic", "Proporciona la funcionalidad del app por medio de dispositivos moviles (iOS, Android).")
+    Container(db, "Base de datos", "Esquema no relacional (Firestore)", "Guarda información del registro del cliente, información de las tiendas, sectores, descuentos, órdenes, configuración de la app, etc.")
+    Container(cloud, "Cloud Functions", "Firebase", "Proporciona funcionalidad del app y envío de clientes y órdenes por medio de peticiones JSON/HTTP.")
+
+    Rel(ma, cloud, "Usa", "JSON/HTTPS")
+    Rel(cloud, api, "Envía clientes y órdenes","JSON/HTTPS")
+    Rel(cloud, db, "Lee y escriba en", "JSON/HTTPS")
+    Rel(cloud, sg, "Envía correo", "JSON/HTTPS")
+    Rel(cloud, tw, "Envía minimensaje", "JSON/HTTPS")
+    Rel(cloud, azul, "Procesa el pago", "JSON/HTTPS")
+    Rel(azul, cloud, "Notifica estado de la transacción", "JSON/HTTPS")
+    ' Rel(cloud, es, "Sends e-mails", "JSON/HTTPS")
+    ' Rel(api, mbs, "Uses", "XML/HTTPS")
+ 
+ 
+    ' Rel(wa, spa, "Delivers")
+    ' Rel(spa, cloud, "Uses", "JSON/HTTPS")
+  
+}
+Rel(cust, ma, "Usa", "Nativo")
+Rel(sg, cust, "Envía confirmación de cuenta, restablecimiento de contraseña y/o factura de pedido")
+Rel(tw, cust, "Envía confirmación de teléfono")
+' Rel(pbc, spa, "Uses")
+' Rel(pbc, ma, "Uses")
+' Rel(es, pbc, "Sends e-mails to")
+@enduml

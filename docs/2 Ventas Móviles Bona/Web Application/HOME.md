@@ -1,0 +1,16 @@
+# Web Application
+
+![diagram](https://www.plantuml.com/plantuml/svg/0/bLNBRbCn4DrNwZyCNK0gbMG36rQqQGLKfKHDMc1LJMmdjUHhN_n8510Vn1Bn2VqnZdqllGaD1LPn9iTppfoPSLw6o3wcokpkFD9Mc2GLtSHOXnU3WUTbVwxZJPgceBnmDYeR-y9L0vPUirsOLAV1yDdJaM4RBz-U3Gn75I92rqDNrSvcV5sIx-wS7NvyTpcvVlzcylhwxEJLoVbnRp_7dn0DaPgrLRwtv0FQUw-cT5ZNHWkEsjazXFhd9nDwJc-lXldRoBlQUO7Vc0pJBDboDbgo9AaCSLrJpPu9ecTwdZnxMb7bf9uXgSUbGD2MyIfqDvodIadjIiJoGirP8hPKq_xUVbRQ2GrrLZhMTcuKZNYkVbTyeLZ4qt4-NXLbqEAzSgIC4j7V_h1QE7BaOHXF4LDPRFGSrErtBWg4qH2f2dV7pBL6piFH6pf2pPqvlnjJtNwBJhf0hoUJqRYnGzc5BbPu9VHKUz9svdp5GaCFEBSOWxA0RozkmE4ziaiTehOH9yp8GeCxq6hWO6Xs8qifYIXYWfHtuPwJSWhXHoWxeoGZKwxa97nAgc88DTmqbthZJuR6855-FqDU9VQmTLi9hQYDObRTCBIgm40MnWSTOKqfTTFhwoENh6I_sZwN-_HbTuSepsyxx3sMLMwEhBIbOMwUpqenjdIbrR9KDiAki2agrJr9sIWqNN8uW9yYEep7GPaHhqMBMP5riGno4yYIDrNKtiax6KY9iP19jCx-avZMo_hkuZqEJAeDwoIJ7E1Mv1-9ClBsXvSgLw8iYUG3Te9kq374iHFz-rnedrYdEiRtfEn31MslHzvTtC8YKeZhBCDc_HxcMEYGiDwVMuxL5j9sZNFZ3AhazTWM6LxLeRmVsEJ_P4V4DzVoCJy0C9JlzhYGDNHFw4APNj1pM-OiUHrNo7qPkd5g86WeTY12KJKDCnPOfQsuBadPPxn-aXxJ4Y5CjCkwJu-FXfjtrZBY-2ijFZ_WhwIyMXd_DMlEyBo3pUFt2tSwVdVU0LiX-M7kL3-8hG1jFFWhxAyPNs9hop_TJm00)
+
+**Level 3: Component diagram**
+
+Next you can zoom in and decompose each container further to identify the major structural building blocks and their interactions.
+
+The Component diagram shows how a container is made up of a number of "components", what each of those components are, their responsibilities and the technology/implementation details.
+
+**Scope**: A single container.
+
+**Primary elements**: Components within the container in scope.
+Supporting elements: Containers (within the software system in scope) plus people and software systems directly connected to the components.
+
+**Intended audience**: Software architects and developers.

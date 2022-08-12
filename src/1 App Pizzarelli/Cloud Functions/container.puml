@@ -1,0 +1,33 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+' Container(cloud, "Cloud Functions", "javascript and typescript", "Proporciona Provides all the internet banking functionality to customers via their web browser.")
+' Container(ma, "Aplicación Móvil", "Ionic", "PropoProvides a limited subset ot the internet banking functionality to customers via their mobile mobile device.")
+' Container(db, "Database", "Relational Database Schema", "Stores user registration information, hashed authentication credentials, access logs, etc.")
+' System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+Container(ma, "Aplicación Móvil", "Ionic", "Proporciona la funcionalidad del app por medio de dispositivos moviles (iOS, Android).")
+Container(db, "Base de datos", "Esquema no relacional (Firestore)", "Guarda información del registro del cliente, información de las tiendas, sectores, descuentos, órdenes, configuración de la app, etc.")
+System_Ext(azul, "Azul Web", "Procesa el pago de la orden o registra tarjeta de crédito.")
+' System_Ext(tw, "Twilio", "Servicio de envío de minimensajes externo.")
+' System_Ext(sg, "SendGrid", "Servicio de envío de correo externo.")
+Container_Ext(api, "API Bona", ".NET 5", "Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros.")
+Container_Boundary(cloud, "Cloud Functions") {
+    Component(fun, "Funciones", "JSON/HTTPS", "Funciones que permiten ser consultadas por la aplicación móvil")
+    Component(event, "Eventos", "Triggers", "Eventos que se ejecutan al utilizar la aplicación móvil")
+    
+    ' Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+
+}
+Rel(cloud, db, "Lee y escribe")
+Rel(cloud, azul, "Envía y recibe","JSON/HTTPS")
+Rel(cloud, ma, "Notifica, envía o recibe", "JSON/HTTPS")
+Rel(cloud, api, "Envía y recibe","JSON/HTTPS")
+' Rel(spa, sign, "Uses", "JSON/HTTPS")
+' Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+' Rel(ma, sign, "Uses", "JSON/HTTPS")
+' Rel(ma, accounts, "Uses", "JSON/HTTPS")
+@enduml

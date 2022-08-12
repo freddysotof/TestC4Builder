@@ -1,0 +1,39 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+' Container(api, "API Bona", ".NET 5", "Proporciona métodos HTTPS para enviar y recibir información de las entidades del App y enviar información a los distintos servicios y/o aplicaciones de terceros.")
+Container(db, "Base de datos", "Esquema relacional (Sql Server)", "Guarda información de las distintas entidades y configuraciones que necesita el App.")
+Container_Ext(cloud, "Cloud Functions", "Firebase", "Proporciona funcionalidad del app y envío de clientes y órdenes por medio de peticiones JSON/HTTP.")
+System_Ext(c2k, "API C2K", "Integra órdenes a las distintas sucursales de Pizzarelli/Trattoria.")
+System_Ext(rabbit, "RabbitMQ", "Microservicio de cola.")
+System_Ext(chatbot, "ChatBot", "Base de datos del chatbot Pizzarelli.")
+Component_Ext(imail, "IMailService", "Service Interface", "Envia correo SMTP")
+Container_Boundary(api, "API Bona") {
+    Component(consumerabbit, "Consume RabbitMQ", "Background Service", "Recibe órdenes y clientes para ser procesados")
+    Component(fetchstatus, "Fetch OrderStatus C2K", "Background Service", "Consulta el estatus de la orden en la tienda")
+    Component(refresh, "Refresh Discount Status", "Background Service", "Permite consultar el menú de una aplicacion por sistema y usuario")
+
+    Rel(consumerabbit, chatbot, "Envía cliente","JSON/HTTPS")
+    Rel(consumerabbit, c2k, "Envía orden","JSON/HTTPS")
+    Rel(consumerabbit,rabbit, "Elimina registro","JSON/HTTPS")
+    Rel(consumerabbit,imail, "Envía notificación de excepcón","SMTP")
+    Rel(fetchstatus, c2k, "Consulta estatus","JSON/HTTPS")
+    Rel(fetchstatus, db, "Actualiza estatus","EntityFrameworkCore")
+    Rel(fetchstatus, cloud, "Notifica estatus al cliente","JSON/HTTPS")
+    Rel(refresh, cloud, "Envía estatus de descuentos","JSON/HTTPS")
+    ' Rel(accounts, mbsfacade, "Uses")
+    ' Rel(security, db, "Read & write to", "JDBC")
+    ' Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+' Rel(api, db, "Lee y escribe", "EntityFrameworkCore")
+' Rel(app,api, "Consulta y envia", "JSON/HTTPS")
+' Rel(wa,api, "Consulta y envia", "JSON/HTTPS")
+' Rel(spa,api, "Consulta y envia", "JSON/HTTPS")
+' Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+' Rel(ma, sign, "Uses", "JSON/HTTPS")
+' Rel(ma, accounts, "Uses", "JSON/HTTPS")
+@enduml

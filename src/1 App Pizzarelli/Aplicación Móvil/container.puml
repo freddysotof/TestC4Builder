@@ -1,0 +1,39 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+' Container(api, "Aplicación Móvil", "Ionic", "Proporciona la funcionalidad del app por medio de dispositivos moviles (iOS, Android).")
+Container(db, "Base de datos", "Esquema no relacional (Firestore)", "Guarda información del registro del cliente, información de las tiendas, sectores, descuentos, órdenes, configuración de la app, etc.")
+Container(cloud, "Cloud Functions", "Firebase", "Proporciona funcionalidad del app y envío de clientes y órdenes por medio de peticiones JSON/HTTP.")
+' System_Ext(azul, "Azul Web", "Procesa el pago de la orden o registra tarjeta de crédito.")
+' System(vmb, "Ventas Móviles Bona", "Envía las configuraciones de las entidades App Pizzarelli y recibe datos del cliente y órdenes.")
+Container_Boundary(ma, "Aplicación Móvil") {
+    Component(fb, "Inicio de sesión", "Facebook", "Permite al usuario iniciar sesión a la aplicación vía Facebook")
+    Component(google, "Inicio de sesión", "Google", "Permite al usuario iniciar sesión a la aplicación vía Google")
+    Component(apple, "Inicio de sesión", "Apple", "Permite al usuario iniciar sesión a la aplicación vía Apple")
+    Component(sign, "Inicio de sesión","Correo", "Permite al usuario iniciar sesión a la aplicación mediante correo electrónico")
+    Component(security, "Componente de Seguridad", "Firebase Authentication", "Proporciona la funcionalidad de inicio de sesión, cambio de contraseña, etc.")
+    Component(main, "Sistema principal","Ionic Components","Contiene la funcionalidad de la aplicación" )
+    Component(notf, "Sistema de Notificaciones","Firebase Notifications","Envía push notifications a los dispositivos móviles" )
+
+    ' Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+    Rel(fb, security, "Usa")
+    Rel(google, security, "Usa")
+    Rel(apple, security, "Usa")
+    Rel(sign, security, "Usa")
+    Rel(notf, cloud, "Usa")
+    Rel(main, cloud, "Usa","JSON/HTTPS")
+    Rel(main, db, "Lee y escribe","JSON/HTTPS")
+    ' Rel(security, db, "Read & write to", "JDBC")
+    ' Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+' Rel(ma, cloud, "Envía","JSON/HTTPS")
+' Rel(spa, sign, "Uses", "JSON/HTTPS")
+' Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+' Rel(ma, sign, "Uses", "JSON/HTTPS")
+' Rel(ma, accounts, "Uses", "JSON/HTTPS")
+@enduml
